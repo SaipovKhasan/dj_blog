@@ -1,0 +1,5 @@
+1. Loyha uchun papka
+2. .venv activate (.\.venv\Scripts\activate)
+3. pip install django
+4. django-admin startproject {core | config | root | project_name} .
+5. python manage.py startapp {app_name}

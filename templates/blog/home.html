@@ -1,0 +1,20 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}
+    Home
+{% endblock %}
+
+{% block content %}
+    <h2>Bloglar </h2>
+    <ol>
+        {% for blog in blogs %}
+            <li style="font-size: 20px;">
+                {{ blog.title }}
+                <p class="content-card">
+                    {{ blog.content }}
+                </p>
+            </li>
+        {% endfor %}
+    </ol>
+    <hr>
+{% endblock %}
