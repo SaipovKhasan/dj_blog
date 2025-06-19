@@ -1,0 +1,33 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}
+    Detail
+{% endblock %}
+
+{% block content %}
+    <main class="flex-shrink-0">
+        <div class="container"><h1 class="mt-5">{{ blog.title }}</h1>
+            <p class="lead">{{ blog.content }}</p>
+            <p>
+
+                {% if blog.image %}
+                    <img class="img-cover" src="{{ blog.image.url }}" alt="rasm">
+                {% else %}
+                    <svg aria-label="Placeholder: Thumbnail"
+                         class="bd-placeholder-img card-img-top"
+                         height="225"
+                         preserveAspectRatio="xMidYMid slice" role="img"
+                         width="100%"
+                         xmlns="http://www.w3.org/2000/svg"><title>
+                        Placeholder</title>
+                        <rect width="100%" height="100%" fill="#55595c"></rect>
+                        <text x="40%" y="50%" fill="#eceeef"
+                              dy=".3em">{{ blog.title }}</text>
+                    </svg>
+                {% endif %}
+
+
+            </p>
+        </div>
+    </main>
+{% endblock %}
