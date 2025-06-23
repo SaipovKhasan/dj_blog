@@ -7,6 +7,8 @@
 {% block content %}
     <main class="flex-shrink-0">
         <div class="container"><h1 class="mt-5">{{ blog.title }}</h1>
+            <span class="badge rounded-pill text-bg-secondary">{{ blog.type }}</span>
+
             <p class="lead">{{ blog.content }}</p>
             <p>
 
@@ -28,6 +30,7 @@
 
 
             </p>
+
         </div>
     </main>
 {% endblock %}
