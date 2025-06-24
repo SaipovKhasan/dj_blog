@@ -8,8 +8,8 @@
 
     {% include 'blog/section.html' %}
 
-    <h2>Bloglar soni {{ blogs.count }} ta</h2>
-
+    <span class="fs-2 fw-medium"> Blogs: {{ blogs.count }}</span>
+    <a href="{% url 'create' %}" class="btn btn-outline-success float-end">+ Add Blog</a>
     <div class="album py-5 bg-body-tertiary">
         <div class="container">
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">

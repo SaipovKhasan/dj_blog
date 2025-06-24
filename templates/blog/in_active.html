@@ -8,7 +8,7 @@
 
     {#    {% include 'blog/section.html' %}#}
 
-    <h2>Aktivmas bloglar soni {{ blogs.count }} ta</h2>
+    <h2>Inactive blogs: {{ blogs.count }}</h2>
 
     <div class="album py-5 bg-body-tertiary">
         <div class="container">
@@ -39,7 +39,7 @@
                                         <a href="{% url 'update' blog.id %}" type="button"
                                            class="btn btn-sm btn-outline-secondary">Edit</a>
                                     </div>
-                                    <small class="text-body-secondary">9 mins</small></div>
+                                    <small class="text-body-secondary"></small></div>
                             </div>
                         </div>
                     </div>
