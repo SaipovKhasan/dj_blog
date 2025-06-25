@@ -31,9 +31,9 @@
                     <a class="nav-link disabled" aria-disabled="true">Disabled</a>
                 </li>
             </ul>
-            <form class="d-flex" role="search">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
-                <button class="btn btn-outline-success" type="submit">Search</button>
+            <form method="GET" action="{% url 'search' %}" class="d-flex">
+                <input type="text" name="q" class="form-control me-2" placeholder="Search...">
+                <button type="submit" class="btn btn-outline-success">Search</button>
             </form>
         </div>
     </div>

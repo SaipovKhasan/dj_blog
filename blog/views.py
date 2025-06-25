@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.shortcuts import render, get_object_or_404, redirect
-
+from django.db.models import Q
 import blog
 from blog.forms import BlogForms
 from blog.models import Blog
@@ -73,3 +73,24 @@ def create(request):
         "blog": blog
     }
     return render(request, 'blog/create_blog.html', context=context)
+
+
+# def search(request):
+#     query = request.GET.get('q')
+#     if query:
+#         result = Blog.objects.filter(title__icontains=query)
+#     else:
+#         result = Blog.objects.all()
+#
+#     return render(request, 'blog/search.html', {
+#         'result': result,
+#         'query': query
+#     })
+def search(request):
+    query = request.GET.get('q', '')
+    results = Blog.objects.filter(title__icontains=query) if query else []
+
+    return render(request, 'blog/search.html', {
+        'query': query,
+        'results': results
+    })
