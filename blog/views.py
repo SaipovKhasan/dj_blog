@@ -88,9 +88,15 @@ def create(request):
 #     })
 def search(request):
     query = request.GET.get('q', '')
+    # results = []
+    # if query:
+    #     result = Blog.objects.filter(title__icontains=query)
     results = Blog.objects.filter(title__icontains=query) if query else []
-
     return render(request, 'blog/search.html', {
         'query': query,
         'results': results
     })
+
+
+def carousel_view(request):
+    return render(request, 'blog/carousel.html')

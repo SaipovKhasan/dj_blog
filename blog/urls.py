@@ -10,4 +10,5 @@ urlpatterns = [
     path('<int:blog_id>/delete', views.delete, name='delete'),
     path('create/', views.create, name='create'),
     path('search/', views.search, name='search'),
+    path('carousel/', views.carousel_view, name='carousel'),
 ]
