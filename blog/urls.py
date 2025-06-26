@@ -9,6 +9,5 @@ urlpatterns = [
     path('<int:blog_id>/update', views.update, name='update'),
     path('<int:blog_id>/delete', views.delete, name='delete'),
     path('create/', views.create, name='create'),
-    path('search/', views.search, name='search'),
-    path('carousel/', views.carousel_view, name='carousel'),
+    # path('search/', views.search, name='search'),
 ]

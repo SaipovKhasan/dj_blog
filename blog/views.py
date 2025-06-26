@@ -1,14 +1,17 @@
 from django.contrib import messages
 from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import Q
-import blog
 from blog.forms import BlogForms
 from blog.models import Blog
 
 
 def home(request):
+    blog = Blog.objects.filter(is_active=True)
+    search = request.GET.get('active_query')
+    if search:
+        blog = Blog.objects.filter(title__icontains=search, is_active=True)
     context = {
-        "blogs": Blog.objects.filter(is_active=True)
+        "blogs": blog
     }
     return render(request, template_name='blog/home.html', context=context)
 
@@ -41,7 +44,10 @@ def update(request, blog_id):
         if form.is_valid():
             form.save()
             messages.success(request, message=f"{blog.title} updated successfully!")
-            return redirect('home')
+            if blog.is_active:
+                return redirect('home')
+            else:
+                return redirect('in_active_blogs')
     else:
         form = BlogForms(instance=blog)
     context = {
@@ -61,7 +67,7 @@ def create(request):
     if request.method == 'POST':
         form = BlogForms(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            blog = form.save()
             messages.success(request, message=f'{blog.title} created successfully')
             return redirect('home')
     else:
@@ -69,8 +75,7 @@ def create(request):
         form = BlogForms()
 
     context = {
-        "form": form,
-        "blog": blog
+        "form": form
     }
     return render(request, 'blog/create_blog.html', context=context)
 
@@ -86,17 +91,13 @@ def create(request):
 #         'result': result,
 #         'query': query
 #     })
-def search(request):
-    query = request.GET.get('q', '')
-    # results = []
-    # if query:
-    #     result = Blog.objects.filter(title__icontains=query)
-    results = Blog.objects.filter(title__icontains=query) if query else []
-    return render(request, 'blog/search.html', {
-        'query': query,
-        'results': results
-    })
-
-
-def carousel_view(request):
-    return render(request, 'blog/carousel.html')
+# def search(request):
+#     query = request.GET.get('q', '')
+#     # results = []
+#     # if query:
+#     #     result = Blog.objects.filter(title__icontains=query)
+#     results = Blog.objects.filter(title__icontains=query) if query else []
+#     return render(request, 'blog/search.html', {
+#         'query': query,
+#         'results': results
+#     })
