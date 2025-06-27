@@ -12,7 +12,7 @@
 {% endblock %}
 
 {% block content %}
-
+    {% include 'blog/carousel.html' %}
     {% include 'blog/section.html' %}
     <span class="fs-2 fw-medium">Blogs: {{ blogs.count }}</span>
     <a href="{% url 'create' %}" class="btn btn-outline-success float-end">+ Add Blog</a>

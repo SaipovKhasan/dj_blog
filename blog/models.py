@@ -1,3 +1,4 @@
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 
@@ -8,8 +9,8 @@ class Blog(models.Model):
         'Travel stories': 'Travel stories',
         'Personal growth': 'Personal growth'
     }
-    title = models.CharField(max_length=200, verbose_name='Sarlavha')
-    content = models.TextField(verbose_name='Tavsif')
+    title = models.CharField(max_length=200, verbose_name='Title')
+    content = models.TextField(verbose_name='Description')
     image = models.ImageField(upload_to='blog_images/', blank=True, null=True)
     is_active = models.BooleanField(default=True)
     type = models.CharField(max_length=50, choices=TYPE, default='Jounal')
@@ -18,3 +19,10 @@ class Blog(models.Model):
 
     def __str__(self):
         return f"{self.id} {self.title}"
+
+
+# class UserCustom(AbstractUser):
+#     phone = models.EmailField(unique=True, blank=True, null=True)
+#
+#     def __str__(self):
+#         return self.username
