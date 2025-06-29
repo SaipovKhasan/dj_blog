@@ -1,8 +1,9 @@
 from django.contrib import messages
 from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import Q
-from blog.forms import BlogForms
+from blog.forms import BlogForms, UserForms, CustomUserCreationForm
 from blog.models import Blog
+from django.contrib.auth import logout
 
 
 def home(request):
@@ -80,24 +81,25 @@ def create(request):
     return render(request, 'blog/create_blog.html', context=context)
 
 
-# def search(request):
-#     query = request.GET.get('q')
-#     if query:
-#         result = Blog.objects.filter(title__icontains=query)
-#     else:
-#         result = Blog.objects.all()
-#
-#     return render(request, 'blog/search.html', {
-#         'result': result,
-#         'query': query
-#     })
-# def search(request):
-#     query = request.GET.get('q', '')
-#     # results = []
-#     # if query:
-#     #     result = Blog.objects.filter(title__icontains=query)
-#     results = Blog.objects.filter(title__icontains=query) if query else []
-#     return render(request, 'blog/search.html', {
-#         'query': query,
-#         'results': results
-#     })
+def register(request):
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            messages.success(request, message=f'{user.username} username is created')
+            return redirect('home')
+    else:
+        form = CustomUserCreationForm()
+    context = {
+        'form': form
+    }
+    return render(request, 'blog/register.html', context=context)
+
+
+def site_logout(request):
+    logout(request)
+    return redirect('ask_login')
+
+
+def ask_login(request):
+    return render(request, 'blog/logout.html')

@@ -52,12 +52,31 @@
             </ul>
             {% block search %}
             {% endblock %}
+            {% if user.is_authenticated %}
+                <ul class="navbar-nav me-left mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login' %}">{{ user.username }} Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'site_logout' %}">Logout</a>
+                    </li>
+                </ul>
+            {% else %}
+                <ul class="navbar-nav me-left mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login' %}">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'register' %}">Register</a>
+                    </li>
+                </ul>
+            {% endif %}
         </div>
     </div>
 </nav>
 
 {% for message in messages %}
-    <div class="alert alert-{{ message.tags }} alert-dismissible fade show sticky-top" role="alert">
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show sticky-top z-3" role="alert">
         <strong>{{ message.tags|upper }}: </strong> {{ message }}
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
