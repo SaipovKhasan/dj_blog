@@ -1,0 +1,24 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+    Profile
+{% endblock %}
+
+{% block content %}
+    <div class="card my-2">
+        <div class="card-header">
+            <p class="fs-3 text-primary">Change info</p>
+        </div>
+        <div class="card-body">
+            <form method="POST" action="{% url 'change_profile' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ u_form|crispy }}
+                {{ p_form|crispy }}
+                <button type="submit" class="btn btn-primary">Change</button>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

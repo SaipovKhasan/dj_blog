@@ -5,6 +5,7 @@ from django.urls import path, include
 from blog import views
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.views import LogoutView
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('blog.urls')),
@@ -15,6 +16,8 @@ urlpatterns = [
     path('logout/', views.site_logout, name='site_logout'),
     path('ask_login/', views.ask_login, name='ask_login'),
     path('logout/', LogoutView.as_view(template_name='blog/logout.html'), name='site_logout'),
+    path('profile/', views.profile, name='profile'),
+    path('change/', views.change_profile, name='change_profile'),
 ]
 
 if settings.DEBUG:

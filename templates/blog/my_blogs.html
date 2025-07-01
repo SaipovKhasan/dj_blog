@@ -5,17 +5,17 @@
 {% endblock %}
 
 {% block search %}
-    <form action="{% url 'home' %}" class="d-flex" role="search">
-        <input class="form-control me-2" name="active_query" type="search" placeholder="Active Blogs" aria-label="Search" required/>
+    <form class="d-flex" role="search">
+        <input class="form-control me-2" name="my_active_query" type="search" placeholder="My active blogs"
+               aria-label="Search" required/>
         <button class="btn btn-outline-success" type="submit">Search</button>
     </form>
 {% endblock %}
 
 {% block content %}
-    {% include 'blog/carousel.html' %}
-    {% include 'blog/section.html' %}
-    <span class="fs-2 fw-medium">Blogs: {{ blogs.count }}</span>
-    <a href="{% url 'create' %}" class="btn btn-outline-success float-end mt-2">+ Add Blog</a>
+
+    <h2>Active blogs: {{ blogs.count }}</h2>
+
     <div class="album py-5 bg-body-tertiary">
         <div class="container">
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
