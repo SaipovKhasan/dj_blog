@@ -10,22 +10,16 @@ class BlogForms(forms.ModelForm):
         fields = ['title', 'content', 'type', 'image', 'is_active']
 
 
-class UserForms(UserCreationForm):
-    class Meta:
-        model = CustomUser
-        fields = ['username', 'email', 'password1', 'password2', 'is_staff', 'phone']
-
-
 class CustomUserCreationForm(UserCreationForm):
     class Meta:
         model = CustomUser
-        fields = ['username', 'phone', 'email']
+        fields = ('username', 'phone')
 
 
 class CustomUserChangeForm(UserChangeForm):
     class Meta:
         model = CustomUser
-        fields = ('username', 'phone',)
+        fields = ('username', 'phone', 'first_name', 'last_name', 'email')
 
 
 class ProfileForm(forms.ModelForm):

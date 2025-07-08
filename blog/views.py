@@ -1,48 +1,58 @@
+import random
+from dataclasses import dataclass
+
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, get_object_or_404, redirect
-from django.db.models import Q
-from blog.forms import BlogForms, UserForms, CustomUserCreationForm, ProfileForm, CustomUserChangeForm
-from blog.models import Blog, CustomUser, Profile
 from django.contrib.auth import logout
+from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
+from django.shortcuts import render, get_object_or_404, redirect
+
+from blog.forms import BlogForms, CustomUserCreationForm, ProfileForm, CustomUserChangeForm
+from blog.models import Blog, CustomUser, Profile
 
 
 @login_required
 def home(request):
     blogs = Blog.objects.filter(is_active=True)
+
     search = request.GET.get('active_query')
     if search:
         blogs = Blog.objects.filter(title__icontains=search, is_active=True)
+
+    paginator = Paginator(blogs, 6)
+    page_number = request.GET.get("page")
+    print(page_number)
+    page_obj = paginator.get_page(page_number)
+
     context = {
-        "blogs": blogs
+        "page_obj": page_obj,
+        "blog_count": paginator.count
     }
     return render(request, template_name='blog/home.html', context=context)
 
 
 @login_required
 def my_active_blogs(request):
-    blog = Blog.objects.filter(is_active=True, author=request.user)
-
+    blogs = Blog.objects.filter(is_active=True, author=request.user)
     search = request.GET.get('my_active_query')
     if search:
-        blog = Blog.objects.filter(title__icontains=search, is_active=False, author=request.user)
+        blogs = Blog.objects.filter(title__icontains=search, is_active=False, author=request.user)
 
     context = {
-        "blogs": blog
+        "blogs": blogs,
     }
     return render(request, template_name='blog/my_blogs.html', context=context)
 
 
 @login_required
 def in_active(request):
-    blog = Blog.objects.filter(is_active=False, author=request.user)
-
+    blogs = Blog.objects.filter(is_active=False, author=request.user)
     search = request.GET.get('in_active_query')
     if search:
-        blog = Blog.objects.filter(title__icontains=search, is_active=False, author=request.user)
+        blogs = Blog.objects.filter(title__icontains=search, is_active=False, author=request.user)
 
     context = {
-        "blogs": blog
+        "blogs": blogs,
     }
     return render(request, template_name='blog/in_active.html', context=context)
 
@@ -66,12 +76,11 @@ def update(request, blog_id):
     if request.method == 'POST':
         form = BlogForms(request.POST, request.FILES, instance=blog)
         if form.is_valid():
-            form.save()
-            messages.success(request, message=f"{blog.title} updated successfully!")
+            blog = form.save()
+            messages.success(request, message=f"{blog.title} o'zgartirildi!")
             if blog.is_active:
                 return redirect('home')
-            else:
-                return redirect('in_active_blogs')
+            return redirect('in_active_blogs')
     else:
         form = BlogForms(instance=blog)
     context = {
@@ -94,10 +103,10 @@ def create(request):
             blog = form.save(commit=False)
             blog.author = request.user
             blog.save()  # commit=True
-            messages.success(request, message=f"{blog.title} created successfully")
+            messages.success(request, message=f"{blog.title} yaratildi!")
             return redirect('home')
     else:
-        messages.warning(request, message=f"We are currently in test mode!")
+        messages.warning(request, message=f"Hozirda biz test rejimida ishlayapmiz!")
         form = BlogForms()
 
     context = {
@@ -111,12 +120,12 @@ def register(request):
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            messages.success(request, message=f'{user.username} username is created')
+            messages.success(request, message=f"{user.username} username li foydalanuvchi yaratildi!")
             return redirect('home')
     else:
         form = CustomUserCreationForm()
     context = {
-        'form': form
+        "form": form
     }
     return render(request, 'blog/register.html', context=context)
 
@@ -127,12 +136,12 @@ def site_logout(request):
 
 
 def ask_login(request):
-    return render(request, 'blog/logout.html')
+    return render(request, 'blog/ask_login.html')
 
 
 def profile(request):
     user = get_object_or_404(CustomUser, id=request.user.id)
-    profile = Profile.objects.filter(user__id=request.user.id).first()
+    profile = Profile.objects.filter(user__id=user.id).first()
     context = {
         "user": user,
         "profile": profile
@@ -150,7 +159,7 @@ def change_profile(request):
             u_form.save()
         if p_form.is_valid():
             p_form.save()
-        return redirect('profile', user.id)
+        return redirect('profile')
     else:
         u_form = CustomUserChangeForm(instance=user)
         p_form = ProfileForm(instance=profile)

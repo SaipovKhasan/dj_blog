@@ -6,20 +6,22 @@
 
 {% block search %}
     <form action="{% url 'home' %}" class="d-flex" role="search">
-        <input class="form-control me-2" name="active_query" type="search" placeholder="Active Blogs" aria-label="Search" required/>
+        <input class="form-control me-2" name="active_query" type="search" placeholder="Active Blogs"
+               aria-label="Search" required/>
         <button class="btn btn-outline-success" type="submit">Search</button>
     </form>
 {% endblock %}
 
+
 {% block content %}
     {% include 'blog/carousel.html' %}
     {% include 'blog/section.html' %}
-    <span class="fs-2 fw-medium">Blogs: {{ blogs.count }}</span>
+    <span class="fs-2 fw-medium">Bloglar soni {{ blog_count }} ta</span>
     <a href="{% url 'create' %}" class="btn btn-outline-success float-end mt-2">+ Add Blog</a>
-    <div class="album py-5 bg-body-tertiary">
+    <div class="album py-5 bg-body-tertiary my-2">
         <div class="container">
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-                {% for blog in blogs %}
+                {% for blog in page_obj %}
                     <div class="col">
                         <div class="card shadow-sm">
                             {% if blog.image %}
@@ -42,8 +44,10 @@
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div class="btn-group">
                                         <a href="{% url 'detail' blog.id %}" class="btn btn-sm btn-outline-secondary">View</a>
-                                        <a href="{% url 'update' blog.id %}" type="button"
-                                           class="btn btn-sm btn-outline-secondary">Edit</a>
+                                        {% if blog.author == user %}
+                                            <a href="{% url 'update' blog.id %}" type="button"
+                                               class="btn btn-sm btn-outline-secondary">Edit</a>
+                                        {% endif %}
                                     </div>
                                     <small class="text-body-secondary">{{ blog.created_at|timesince }} ago</small></div>
                             </div>
@@ -53,5 +57,45 @@
             </div>
         </div>
     </div>
+    <!-- Paginator -->
+    <ul class="pagination" id="pagination">
+        {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a href="?page=1#pagination" class="page-link">&laquo; first</a>
+            </li>
+            <li class="page-item">
+                <a href="?page={{ page_obj.previous_page_number }}#pagination" class="page-link">previous</a>
+            </li>
+        {% endif %}
+
+        <li class="page-item active">
+            <a href="?page={{ page_obj.number }}#pagination" aria-current="page" class="page-link">{{ page_obj.number }}</a>
+        </li>
+
+        {% if page_obj.has_next %}
+            <li class="page-item">
+                <a href="?page={{ page_obj.next_page_number }}#pagination" class="page-link">next</a>
+            </li>
+            <li class="page-item">
+                <a href="?page={{ page_obj.paginator.num_pages }}#pagination" class="page-link">last &raquo;</a>
+            </li>
+        {% endif %}
+    </ul>
+{#    <nav aria-label="...">#}
+{#        <ul class="pagination">#}
+{#            <li class="page-item disabled">#}
+{#                <a class="page-link">Previous</a>#}
+{#            </li>#}
+{#            <li class="page-item"><a class="page-link" href="#">1</a></li>#}
+{#            <li class="page-item active">#}
+{#                <a class="page-link" href="#" aria-current="page">2</a>#}
+{#            </li>#}
+{#            <li class="page-item"><a class="page-link" href="#">3</a></li>#}
+{#            <li class="page-item">#}
+{#                <a class="page-link" href="#">Next</a>#}
+{#            </li>#}
+{#        </ul>#}
+{#    </nav>#}
+
 
 {% endblock %}
