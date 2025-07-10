@@ -21,6 +21,11 @@ class Blog(models.Model):
     def __str__(self):
         return f"{self.id} {self.title}"
 
+    class Meta:
+        permissions = [
+            ('can_all_manage', 'Can all changed models')
+        ]
+
 
 class CustomUser(AbstractUser):
     phone = models.CharField(unique=True)

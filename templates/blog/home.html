@@ -16,7 +16,7 @@
 {% block content %}
     {% include 'blog/carousel.html' %}
     {% include 'blog/section.html' %}
-    <span class="fs-2 fw-medium">Bloglar soni {{ blog_count }} ta</span>
+    <span class="fs-2 fw-medium">Blogs: {{ blog_count }}</span>
     <a href="{% url 'create' %}" class="btn btn-outline-success float-end mt-2">+ Add Blog</a>
     <div class="album py-5 bg-body-tertiary my-2">
         <div class="container">
@@ -69,7 +69,8 @@
         {% endif %}
 
         <li class="page-item active">
-            <a href="?page={{ page_obj.number }}#pagination" aria-current="page" class="page-link">{{ page_obj.number }}</a>
+            <a href="?page={{ page_obj.number }}#pagination" aria-current="page"
+               class="page-link">{{ page_obj.number }}</a>
         </li>
 
         {% if page_obj.has_next %}
@@ -81,21 +82,21 @@
             </li>
         {% endif %}
     </ul>
-{#    <nav aria-label="...">#}
-{#        <ul class="pagination">#}
-{#            <li class="page-item disabled">#}
-{#                <a class="page-link">Previous</a>#}
-{#            </li>#}
-{#            <li class="page-item"><a class="page-link" href="#">1</a></li>#}
-{#            <li class="page-item active">#}
-{#                <a class="page-link" href="#" aria-current="page">2</a>#}
-{#            </li>#}
-{#            <li class="page-item"><a class="page-link" href="#">3</a></li>#}
-{#            <li class="page-item">#}
-{#                <a class="page-link" href="#">Next</a>#}
-{#            </li>#}
-{#        </ul>#}
-{#    </nav>#}
+    {#    <nav aria-label="...">#}
+    {#        <ul class="pagination">#}
+    {#            <li class="page-item disabled">#}
+    {#                <a class="page-link">Previous</a>#}
+    {#            </li>#}
+    {#            <li class="page-item"><a class="page-link" href="#">1</a></li>#}
+    {#            <li class="page-item active">#}
+    {#                <a class="page-link" href="#" aria-current="page">2</a>#}
+    {#            </li>#}
+    {#            <li class="page-item"><a class="page-link" href="#">3</a></li>#}
+    {#            <li class="page-item">#}
+    {#                <a class="page-link" href="#">Next</a>#}
+    {#            </li>#}
+    {#        </ul>#}
+    {#    </nav>#}
 
 
 {% endblock %}

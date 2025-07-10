@@ -4,7 +4,9 @@ from dataclasses import dataclass
 from django.contrib import messages
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
+from django.core.mail import send_mail
 from django.core.paginator import Paginator
+from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 
 from blog.forms import BlogForms, CustomUserCreationForm, ProfileForm, CustomUserChangeForm
@@ -19,9 +21,8 @@ def home(request):
     if search:
         blogs = Blog.objects.filter(title__icontains=search, is_active=True)
 
-    paginator = Paginator(blogs, 6)
+    paginator = Paginator(blogs, 3)
     page_number = request.GET.get("page")
-    print(page_number)
     page_obj = paginator.get_page(page_number)
 
     context = {
@@ -64,15 +65,21 @@ def about(request):
 
 
 def detail(request, blog_id):
-    blog = get_object_or_404(Blog, id=blog_id)
-    context = {
-        "blog": blog
-    }
-    return render(request, template_name='blog/detail.html', context=context)
+    # if request.user.has_perms(['blog.change_blog', 'blog.edit_blog', ])
+    if request.user.has_perm('blog.can_all_manage'):
+        blog = get_object_or_404(Blog, id=blog_id)
+        context = {
+            "blog": blog
+        }
+        return render(request, template_name='blog/detail.html', context=context)
 
 
 def update(request, blog_id):
-    blog = get_object_or_404(Blog, id=blog_id)
+    if request.user.has_perm('blog.change_blog'):
+        blog = get_object_or_404(Blog, id=blog_id)
+    else:
+        blog = get_object_or_404(Blog, id=blog_id, author=request.user)
+
     if request.method == 'POST':
         form = BlogForms(request.POST, request.FILES, instance=blog)
         if form.is_valid():
@@ -91,8 +98,11 @@ def update(request, blog_id):
 
 
 def delete(request, blog_id):
-    blog = get_object_or_404(Blog, id=blog_id)
-    blog.delete()
+    if request.user.has_perm('blog.delete_blog'):
+        blog = get_object_or_404(Blog, id=blog_id, author=request.user)
+        blog.delete()
+    else:
+        return HttpResponse('Siz bu blogni ochira olmaysiz')
     return redirect('home')
 
 
@@ -169,3 +179,14 @@ def change_profile(request):
         "p_form": p_form
     }
     return render(request, 'user/profile_change.html', context=context)
+
+
+def test_email(request):
+    send_mail(
+        'Test',
+        'Message test',
+        'saipovxasan10@gmail.com',
+        CustomUser.objects.values_list('email', flat=True),
+        fail_silently=False,
+    )
+    return HttpResponse('Test email muvoffaqqiyatli yuborildi!')

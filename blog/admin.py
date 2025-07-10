@@ -4,7 +4,12 @@ from django.contrib.auth.admin import UserAdmin
 from blog.forms import CustomUserCreationForm  # ,  # CustomUserChangeForm
 from blog.models import Blog, CustomUser, Profile
 
-admin.site.register([Blog, Profile])
+admin.site.register([Profile])
+
+
+@admin.register(Blog)
+class BlogAdmin(admin.ModelAdmin):
+    list_display = ['title']
 
 
 @admin.register(CustomUser)

@@ -19,7 +19,7 @@ class CustomUserCreationForm(UserCreationForm):
 class CustomUserChangeForm(UserChangeForm):
     class Meta:
         model = CustomUser
-        fields = ('username', 'phone', 'first_name', 'last_name', 'email')
+        fields = ('username', 'phone')
 
 
 class ProfileForm(forms.ModelForm):
