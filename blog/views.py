@@ -9,8 +9,8 @@ from django.core.paginator import Paginator
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 
-from blog.forms import BlogForms, CustomUserCreationForm, ProfileForm, CustomUserChangeForm
-from blog.models import Blog, CustomUser, Profile
+from blog.forms import BlogForms, CustomUserCreationForm, ProfileForm, CustomUserChangeForm, CommentForm
+from blog.models import Blog, CustomUser, Profile, Comment
 
 
 @login_required
@@ -65,13 +65,21 @@ def about(request):
 
 
 def detail(request, blog_id):
-    # if request.user.has_perms(['blog.change_blog', 'blog.edit_blog', ])
-    if request.user.has_perm('blog.can_all_manage'):
-        blog = get_object_or_404(Blog, id=blog_id)
-        context = {
-            "blog": blog
-        }
-        return render(request, template_name='blog/detail.html', context=context)
+    blog = get_object_or_404(Blog, id=blog_id)
+    comments = Comment.objects.filter(blog=blog)
+    comment_form = CommentForm(request.POST or None)
+    if comment_form.is_valid():
+        comment = comment_form.save(commit=False)
+        comment.author = request.user
+        comment.blog = blog
+        comment.save()
+        return redirect('detail', blog_id=blog_id)
+    context = {
+        "blog": blog,
+        "comment_form": comment_form,
+        "comments": comments
+    }
+    return render(request, template_name='blog/detail.html', context=context)
 
 
 def update(request, blog_id):
@@ -165,10 +173,12 @@ def change_profile(request):
     if request.method == 'POST':
         u_form = CustomUserChangeForm(request.POST, instance=user)
         p_form = ProfileForm(request.POST, request.FILES, instance=profile)
-        if u_form.is_valid():
+        if u_form.is_valid() and p_form.is_valid():
             u_form.save()
-        if p_form.is_valid():
-            p_form.save()
+            profile = p_form.save(commit=False)
+            profile.user = request.user
+            profile.save()
+
         return redirect('profile')
     else:
         u_form = CustomUserChangeForm(instance=user)
@@ -190,3 +200,5 @@ def test_email(request):
         fail_silently=False,
     )
     return HttpResponse('Test email muvoffaqqiyatli yuborildi!')
+
+

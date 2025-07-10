@@ -1,5 +1,5 @@
 {% extends 'blog/base.html' %}
-
+{% load crispy_forms_tags %}
 {% block title %}
     Detail
 {% endblock %}
@@ -34,4 +34,31 @@
             <i class="bi bi-calendar-date"></i> {{ blog.created_at|timesince }} ago
         </div>
     </main>
+
+    {#Comments#}
+    <hr>
+    <form method="POST" action="{% url 'detail' blog.id %}">
+        {% csrf_token %}
+        {{ comment_form|crispy }}
+        <button class="btn btn-outline-secondary float-end" type="submit" id="button-addon2">Send Comment</button>
+    </form>
+
+    <p class="fs-3">Comments {{ comments.count }}</p>
+    <div style="height: 550px; padding: 20px; overflow-y: auto;" class="scroll">
+        {% if comments %}
+
+            {% for comment in comments %}
+
+                <img style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; display: inline;"
+                     src="{{ comment.author.profile.image.url }}" alt="rasm">
+                <span>{{ comment.author.get_full_name }}: @{{ comment.author.username }}</span>
+                <p>{{ comment.message }}</p>
+            {% endfor %}
+
+
+        {% else %}
+            <p>Hozircha komment yo'q</p>
+        {% endif %}
+    </div>
+
 {% endblock %}

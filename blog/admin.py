@@ -1,10 +1,8 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
+from blog.models import Blog, CustomUser, Profile, Comment
 
-from blog.forms import CustomUserCreationForm  # ,  # CustomUserChangeForm
-from blog.models import Blog, CustomUser, Profile
-
-admin.site.register([Profile])
+admin.site.register([Profile, Comment])
 
 
 @admin.register(Blog)
@@ -14,9 +12,6 @@ class BlogAdmin(admin.ModelAdmin):
 
 @admin.register(CustomUser)
 class CustomUserAdmin(UserAdmin):
-    # model = CustomUser
-    # add_form = CustomUserCreationForm
-    # form = CustomUserChangeForm
     list_display = ['username', 'email', 'is_staff', 'phone', 'date_joined', 'id']
     list_display_links = ['username', 'phone', 'id']
 
